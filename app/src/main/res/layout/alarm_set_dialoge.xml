@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <!-- Time Picker -->
+
+
+    <com.shawnlin.numberpicker.NumberPicker
+        android:id="@+id/alarm_time_picker_hour"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:np_divider="@android:color/transparent"
+        app:np_fadingEdgeEnabled="true"
+        app:np_formatter="%02d"
+        app:np_max="23"
+        app:np_min="0"
+        app:np_selectedTextSize="@dimen/_24sdp"
+        app:np_textSize="@dimen/_20sdp"
+        app:np_wheelItemCount="5" />
+
+
+    <com.shawnlin.numberpicker.NumberPicker
+        android:id="@+id/alarm_time_picker_minute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:background="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:np_divider="@android:color/transparent"
+        app:np_fadingEdgeEnabled="true"
+        app:np_formatter="%02d"
+        app:np_max="59"
+        app:np_min="0"
+        app:np_selectedTextSize="@dimen/_24sdp"
+        app:np_textSize="@dimen/_20sdp"
+        app:np_wheelItemCount="5" />
+
+    <EditText
+        android:id="@+id/etName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:hint="please type name of medicine(optional)"
+        android:inputType="text"
+        android:paddingHorizontal="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/alarm_time_picker_hour" />
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/ok_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_marginBottom="@dimen/_6sdp"
+        android:background="?attr/selectableItemBackground"
+        android:paddingStart="@dimen/_12sdp"
+        android:paddingTop="6dp"
+        android:paddingEnd="@dimen/_12sdp"
+        android:paddingBottom="6dp"
+        android:text="OK"
+        android:textSize="16sp"
+        app:circularflow_defaultRadius="@dimen/_4sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etName" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/cancel_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_6sdp"
+        android:background="?attr/selectableItemBackground"
+        android:paddingStart="@dimen/_12sdp"
+        android:paddingTop="6dp"
+        android:paddingEnd="@dimen/_12sdp"
+        android:paddingBottom="6dp"
+        android:text="Cancel"
+        android:textSize="16sp"
+        app:circularflow_defaultRadius="@dimen/_6sdp"
+        app:layout_constraintBottom_toBottomOf="@+id/ok_text"
+        app:layout_constraintEnd_toStartOf="@+id/ok_text"
+        app:layout_constraintTop_toTopOf="@+id/ok_text"
+        app:textAllCaps="true" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
