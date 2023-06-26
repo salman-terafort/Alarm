@@ -15,10 +15,14 @@ interface AlarmDao {
     @Query("SELECT * FROM  alarm_table")
     fun getAlarms(): Flow<List<Alarm>>
 
+    @Query("SELECT * from alarm_table WHERE alarmId = :id")
+    fun getAlarm(id: Long): Alarm?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun inserAlarm(alarm: Alarm)
 
     @Delete
     suspend fun deleteAlarm(alarm: Alarm)
+
 
 }

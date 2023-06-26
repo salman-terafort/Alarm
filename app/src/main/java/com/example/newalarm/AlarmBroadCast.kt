@@ -27,7 +27,6 @@ class AlarmBroadCast {
         alarm: Alarm
     ) {
         Log.d("SSS", "setAlarm1: ")
-        Log.i("AlarmId", "at time of forming ${alarm.hashCode()}")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
         //   intent.action = Gson().toJson(alarm)
@@ -35,7 +34,7 @@ class AlarmBroadCast {
         val pendingIntent =
             PendingIntent.getBroadcast(
                 context,
-                111,
+                requestCode,
                 intent,
                 PendingIntent.FLAG_CANCEL_CURRENT
             )
@@ -82,7 +81,12 @@ class AlarmBroadCast {
         /*  pendingIntent =
               PendingIntent.getBroadcast(context, 111, intent, PendingIntent.FLAG_IMMUTABLE)*/
         val pendingIntent =
-            PendingIntent.getBroadcast(context, 111, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            PendingIntent.getBroadcast(
+                context,
+                requestCode,
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
         alarm.cancel(pendingIntent)
         Toast.makeText(context, "Alarm canceled", Toast.LENGTH_SHORT).show()
     }

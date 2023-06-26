@@ -3,7 +3,15 @@ package com.example.newalarm
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
+import java.util.concurrent.atomic.AtomicLong
 
 object AlarmUtils {
     fun createPendingIntent(context: Context, requestCode: Int): PendingIntent {
@@ -33,6 +41,22 @@ object AlarmUtils {
                 .addAction(R.drawable.ic_countdown_timer_24, "Snooze", pendingIntent)
                 .setFullScreenIntent(pendingIntent, true)
         return builder
+    }
+    fun generateUniqueId(): Int {
+        val currentDateTime = Calendar.getInstance()
+        val hour = currentDateTime.get(Calendar.HOUR_OF_DAY)
+        val minute = currentDateTime.get(Calendar.MINUTE)
+        val seconds = currentDateTime.get(Calendar.SECOND)
+        val year = currentDateTime.get(Calendar.YEAR)
+        val day = currentDateTime.get(Calendar.DAY_OF_YEAR)
+        val uniqueId = (year) + (hour * 100) + minute + day + (seconds * generateRandomNumber())
+        return uniqueId
+    }
+
+    fun generateRandomNumber(): Int {
+        // Generate a random number using your preferred method or library
+        // For simplicity, this example generates a random number between 1 and 100
+        return (1..100).random()
     }
 
 }

@@ -1,9 +1,11 @@
 package com.example.newalarm
 
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,6 +15,7 @@ import com.example.newalarm.databinding.ActivityMainBinding
 import com.example.newalarm.dialog.AlarmSetDialoge
 import com.example.newalarm.model.Alarm
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), DeleteClickListner {
@@ -55,14 +58,15 @@ class MainActivity : AppCompatActivity(), DeleteClickListner {
                     name: String
                 ) {
                     val alarm = Alarm(
-                        requestCode,
+                        AlarmUtils.generateUniqueId(),
                         name,
                         Integer.parseInt(hour),
                         Integer.parseInt(minutes), 2
                     )
+                    Log.i("AlarmId", AlarmUtils.generateUniqueId().toString())
                     alarmBroadcast?.setAlarm(
                         this@MainActivity, Integer.parseInt(hour),
-                        Integer.parseInt(minutes), 999, alarm
+                        Integer.parseInt(minutes), alarm.alarmId, alarm
                     )
                     viewModel.inserAlarm(alarm)
                 }
@@ -73,7 +77,7 @@ class MainActivity : AppCompatActivity(), DeleteClickListner {
 
     override fun deleteAlarm(alarm: Alarm) {
         viewModel.deleteAlarm(alarm)
-        alarmBroadcast?.cancelAlarm(this, alarm.hashCode())
-        Log.i("AlarmId", "at time of cancelling ${alarm.hashCode()}")
+        alarmBroadcast?.cancelAlarm(this, alarm.alarmId)
+
     }
 }

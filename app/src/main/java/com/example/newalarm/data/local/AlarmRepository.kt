@@ -8,6 +8,7 @@ import javax.inject.Inject
 class AlarmRepository @Inject constructor(private val alarmDao: AlarmDao) {
     val allAlarms: Flow<List<Alarm>> = alarmDao.getAlarms()
 
+
     suspend fun insert(alarm: Alarm) {
         alarmDao.inserAlarm(alarm)
     }
