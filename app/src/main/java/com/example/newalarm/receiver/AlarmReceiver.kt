@@ -20,7 +20,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val sharedPreferences =
             context.getSharedPreferences(Constants.REMAININGDAYSPREF, Context.MODE_PRIVATE)
         val nameOfMedicine = sharedPreferences.getString(Constants.MEDICINE_NAME, "unknown")
-
+        val alarmdId = sharedPreferences.getInt(Constants.ALARM_ID, -1)
         val pendingIntent = createPendingIntent(context, 99)
         val builder = createNotificationBuilder(
             context,
@@ -35,15 +35,15 @@ class AlarmReceiver : BroadcastReceiver() {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minutes = calendar.get(Calendar.MINUTE)
-        Log.d("second alarm", "second alarm recieved")
-        setRepeatingAlarm(
+       /* setRepeatingAlarm(
             context,
             hour,
             minutes,
-        )
+            alarmdId
+        )*/
     }
 
-    private fun setRepeatingAlarm(context: Context, hour: Int, minutes: Int) {
+    private fun setRepeatingAlarm(context: Context, hour: Int, minutes: Int, alarmId: Int) {
         val sharedPreferences =
             context.getSharedPreferences(Constants.REMAININGDAYSPREF, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -57,11 +57,11 @@ class AlarmReceiver : BroadcastReceiver() {
         calendar.set(Calendar.MINUTE, minutes)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
-        // Create an intent that will be fired when the alarm goes off
+
         val intent = Intent(context, AlarmReceiver::class.java)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            111,
+            alarmId,
             intent,
             PendingIntent.FLAG_CANCEL_CURRENT
         )

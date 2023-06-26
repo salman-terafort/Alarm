@@ -23,56 +23,47 @@ class AlarmBroadCast {
         context: Context,
         hour: Int,
         minutes: Int,
-        requestCode: Int,
         alarm: Alarm
     ) {
         Log.d("SSS", "setAlarm1: ")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
-        //   intent.action = Gson().toJson(alarm)
-        // pendingIntent = PendingIntent.getBroadcast(context, 111, intent, 0)
         val pendingIntent =
             PendingIntent.getBroadcast(
                 context,
-                requestCode,
+                alarm.alarmId,
                 intent,
-                PendingIntent.FLAG_CANCEL_CURRENT
-            )
+                PendingIntent.FLAG_IMMUTABLE
+             )
         alarmManager.cancel(pendingIntent)
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, hour)
-        // intent.putExtra("currentDay", calendar?.get(Calendar.DAY_OF_WEEK))
+
         calendar.set(Calendar.MINUTE, minutes)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         val currentTime = System.currentTimeMillis()
         val alarmTime = calendar.timeInMillis
-
         val sharedPreferences =
             context.getSharedPreferences(Constants.REMAININGDAYSPREF, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
         editor.putInt(Constants.REMAININGDAYS, (alarm.numberOfDays) - 1)
-        editor.putInt(Constants.ALARM_ID, alarm.hashCode())
+        editor.putInt(Constants.ALARM_ID, alarm.alarmId)
         editor.putString(Constants.MEDICINE_NAME, alarm.name)
         editor.apply()
-
         // Check if the alarm time has already passed for today
         if (alarmTime != null) {
             if (alarmTime < currentTime) {
                 // Add one day to the alarm time
-                calendar!!.add(Calendar.DAY_OF_YEAR, 1)
+                calendar.add(Calendar.DAY_OF_YEAR, 1)
             }
         }
-
-        Log.d("SSS", "setAlarm2: ")
-
-        alarmManager!!.setExact(
+        alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,
-            calendar!!.timeInMillis,
+            calendar.timeInMillis,
             pendingIntent
         )
         Toast.makeText(context, "Alarm set successfully", Toast.LENGTH_SHORT).show()
-
     }
 
     fun cancelAlarm(context: Context, requestCode: Int) {

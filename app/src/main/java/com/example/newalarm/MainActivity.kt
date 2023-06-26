@@ -1,11 +1,8 @@
 package com.example.newalarm
 
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,7 +12,6 @@ import com.example.newalarm.databinding.ActivityMainBinding
 import com.example.newalarm.dialog.AlarmSetDialoge
 import com.example.newalarm.model.Alarm
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), DeleteClickListner {
@@ -57,18 +53,15 @@ class MainActivity : AppCompatActivity(), DeleteClickListner {
                     days: Int,
                     name: String
                 ) {
-                    val alarm = Alarm(
-                        AlarmUtils.generateUniqueId(),
-                        name,
-                        Integer.parseInt(hour),
-                        Integer.parseInt(minutes), 2
-                    )
-                    Log.i("AlarmId", AlarmUtils.generateUniqueId().toString())
+                    val alarmId = AlarmUtils.generateUniqueId()
+                    val alarm =
+                        Alarm(alarmId, name, Integer.parseInt(hour), Integer.parseInt(minutes), 2)
+
                     alarmBroadcast?.setAlarm(
                         this@MainActivity, Integer.parseInt(hour),
-                        Integer.parseInt(minutes), alarm.alarmId, alarm
+                        Integer.parseInt(minutes), alarm
                     )
-                    viewModel.inserAlarm(alarm)
+                    viewModel.insertAlarm(alarm)
                 }
             })
             show()
