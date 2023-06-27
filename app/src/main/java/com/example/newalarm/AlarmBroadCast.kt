@@ -34,7 +34,7 @@ class AlarmBroadCast {
                 alarm.alarmId,
                 intent,
                 PendingIntent.FLAG_IMMUTABLE
-             )
+            )
         alarmManager.cancel(pendingIntent)
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, hour)
