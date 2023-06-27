@@ -12,5 +12,5 @@ data class Alarm(
     var name : String,
     var alarmHour: Int,
     var minute: Int,
-    val numberOfDays: Int
+    var numberOfDays: Int
 ) : Serializable

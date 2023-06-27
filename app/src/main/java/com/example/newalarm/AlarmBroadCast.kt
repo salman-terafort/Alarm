@@ -28,12 +28,13 @@ class AlarmBroadCast {
         Log.d("SSS", "setAlarm1: ")
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
+        intent.putExtra("object", alarm)
         val pendingIntent =
             PendingIntent.getBroadcast(
                 context,
                 alarm.alarmId,
                 intent,
-                PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_IMMUTABLE
             )
         alarmManager.cancel(pendingIntent)
         val calendar = Calendar.getInstance()
@@ -45,9 +46,9 @@ class AlarmBroadCast {
         val currentTime = System.currentTimeMillis()
         val alarmTime = calendar.timeInMillis
         val sharedPreferences =
-            context.getSharedPreferences(Constants.REMAININGDAYSPREF, Context.MODE_PRIVATE)
+            context.getSharedPreferences(alarm.alarmId.toString(), Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        editor.putInt(Constants.REMAININGDAYS, (alarm.numberOfDays) - 1)
+        editor.putInt(alarm.alarmId.toString(), (alarm.numberOfDays) - 1)
         editor.putInt(Constants.ALARM_ID, alarm.alarmId)
         editor.putString(Constants.MEDICINE_NAME, alarm.name)
         editor.apply()
@@ -76,7 +77,7 @@ class AlarmBroadCast {
                 context,
                 requestCode,
                 intent,
-                PendingIntent.FLAG_CANCEL_CURRENT
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         alarm.cancel(pendingIntent)
         Toast.makeText(context, "Alarm canceled", Toast.LENGTH_SHORT).show()

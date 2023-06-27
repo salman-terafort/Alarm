@@ -4,22 +4,27 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.concurrent.atomic.AtomicLong
 
 object AlarmUtils {
     fun createPendingIntent(context: Context, requestCode: Int): PendingIntent {
         val intent = Intent(context, MainActivity::class.java)
         val day = intent.getIntExtra("currentDay", -1)
+        var pendingIntent: PendingIntent? = null
+
         intent.flags =
             Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_RECEIVER_FOREGROUND
-        return PendingIntent.getActivity(context, requestCode, intent, 0)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            pendingIntent =
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE)
+        } else {
+            pendingIntent =
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+        }
+
+        return pendingIntent
     }
 
     fun createNotificationBuilder(
@@ -42,6 +47,7 @@ object AlarmUtils {
                 .setFullScreenIntent(pendingIntent, true)
         return builder
     }
+
     fun generateUniqueId(): Int {
         val currentDateTime = Calendar.getInstance()
         val hour = currentDateTime.get(Calendar.HOUR_OF_DAY)

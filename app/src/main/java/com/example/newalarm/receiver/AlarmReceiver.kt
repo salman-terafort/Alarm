@@ -11,20 +11,22 @@ import androidx.core.app.NotificationManagerCompat
 import com.example.newalarm.AlarmUtils.createNotificationBuilder
 import com.example.newalarm.AlarmUtils.createPendingIntent
 import com.example.newalarm.data.local.Constants
+import com.example.newalarm.model.Alarm
 import java.util.*
 
 class AlarmReceiver : BroadcastReceiver() {
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {
         Log.i("Recieved", "alarm is recieved")
+        val alarm = intent.getSerializableExtra("object") as Alarm
         val sharedPreferences =
-            context.getSharedPreferences(Constants.REMAININGDAYSPREF, Context.MODE_PRIVATE)
+            context.getSharedPreferences(alarm.alarmId.toString(), Context.MODE_PRIVATE)
         val nameOfMedicine = sharedPreferences.getString(Constants.MEDICINE_NAME, "unknown")
-        val alarmdId = sharedPreferences.getInt(Constants.ALARM_ID, -1)
+        val alarmdId = alarm.alarmId
         val pendingIntent = createPendingIntent(context, 99)
         val builder = createNotificationBuilder(
             context,
-            "Hey, it's time take your $nameOfMedicine",
+            "Hey, it's time take your medicine",
             "it's your medication reminder",
             pendingIntent
         )
@@ -35,19 +37,19 @@ class AlarmReceiver : BroadcastReceiver() {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minutes = calendar.get(Calendar.MINUTE)
-       /* setRepeatingAlarm(
+        setRepeatingAlarm(
             context,
             hour,
             minutes,
-            alarmdId
-        )*/
+            alarm
+        )
     }
 
-    private fun setRepeatingAlarm(context: Context, hour: Int, minutes: Int, alarmId: Int) {
+    private fun setRepeatingAlarm(context: Context, hour: Int, minutes: Int, alarm: Alarm) {
         val sharedPreferences =
-            context.getSharedPreferences(Constants.REMAININGDAYSPREF, Context.MODE_PRIVATE)
+            context.getSharedPreferences(alarm.alarmId.toString(), Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-        var remainigDays = sharedPreferences.getInt(Constants.REMAININGDAYS, -1)
+        var remainigDays = sharedPreferences.getInt(alarm.alarmId.toString(), -1)
         Log.d("Remaining", remainigDays.toString())
         var calendar = Calendar.getInstance()
         var currentDay = calendar.get(Calendar.DAY_OF_WEEK)
@@ -59,11 +61,12 @@ class AlarmReceiver : BroadcastReceiver() {
         calendar.set(Calendar.MILLISECOND, 0)
 
         val intent = Intent(context, AlarmReceiver::class.java)
+        intent.putExtra("object",alarm)
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            alarmId,
+            alarm.alarmId,
             intent,
-            PendingIntent.FLAG_CANCEL_CURRENT
+            PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.cancel(pendingIntent)
@@ -75,7 +78,7 @@ class AlarmReceiver : BroadcastReceiver() {
             )
         }
         remainigDays -= 1
-        editor.putInt(Constants.REMAININGDAYS, remainigDays)
+        editor.putInt(alarm.alarmId.toString(), remainigDays)
         editor.apply()
     }
 }
